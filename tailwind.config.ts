@@ -13,6 +13,17 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      colors: {
+        "morado": "#8430C9",
+        "second-morado": "#6B21A8",
+        "verde": "#059669",
+        "verde-claro": "#34d399",
+        "fondo": "#0f172A",
+        "blanco": "#F5F5F5"
+      },
+      fontFamily: {
+        notojp: ["Noto Sans JP", "sans-serif"],
+      },
     },
   },
   plugins: [],
