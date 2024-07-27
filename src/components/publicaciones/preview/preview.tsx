@@ -3,6 +3,9 @@
 import { ReactNode } from "react";
 import { ViewerJSON } from "./json"
 import ViewerCSV from "./csv";
+import dynamic from "next/dynamic";
+import blooming from "@/public/blooming.svg";
+import Image from "next/image";
 
 interface PreviewProps {
     filename: string;
@@ -12,8 +15,7 @@ interface PreviewProps {
     hash: string;
 }
 
-
-function download(filename:string, blob:Blob){
+function download(filename: string, blob: Blob) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -22,30 +24,47 @@ function download(filename:string, blob:Blob){
     URL.revokeObjectURL(url);
 }
 
-function DataPreview(data:string, type:string): ReactNode {
+function DataPreview(data: string, type: string): ReactNode {
     if (type === 'image') {
-        return <></>
+        return (
+            <div className="flex m-auto justify-center">
+                <div className="block">
+                    <Image src={data} alt="" className="mb-5" />
+                </div>
+            </div>
+        )
     }
-    if(type === 'json'){
+    if (type === 'json') {
         return <ViewerJSON value={data} />
     }
-    if(type === 'csv'){
-        return <ViewerCSV csvData={data}/>
+    if (type === 'csv') {
+        return <ViewerCSV csvData={data} />
     }
-    return <></>
+    if (type === 'pdf') {
+        const ViewerPDF = dynamic(() => import('../preview/pdf'), { ssr: false });
+        return <ViewerPDF data={data} />
+    }
+    return (
+        <div className="flex m-auto justify-center">
+            <div className="block">
+                <Image src={blooming} alt="" width={250} height={250} className="mb-5" />
+                <p className="font-notojp">Sin vista previa disponible</p>
+            </div>
+        </div>
+    )
 }
 
 export default function Preview({ hash, filename, description, data, type }: PreviewProps) {
     const handleDownload = () => {
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/download/${hash}`)
-        .then(res => res.blob())
-        .then(blob => {
-            download(filename, blob);
-        })
+            .then(res => res.blob())
+            .then(blob => {
+                download(filename, blob);
+            })
     };
 
     return (
-        <section className="my-3 border border-gray-300 rounded-md">
+        <section className="border border-gray-300 rounded-md">
             <div className="p-4 bg-morado/70 rounded-t-md">
                 <div className="flex justify-between">
                     <h1 className="font-notojp text-2xl">{filename}</h1>
@@ -55,9 +74,9 @@ export default function Preview({ hash, filename, description, data, type }: Pre
                 </div>
                 <p className="font-notojp">{description}</p>
             </div>
-            <div>
+            <div className="max-h-screen overflow-y-scroll">
                 {
-                DataPreview(data, type)
+                    DataPreview(data, type)
                 }
             </div>
         </section>

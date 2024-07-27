@@ -13,7 +13,7 @@ export default function InputFile({ onDrop, multiple = true, accept }: InputFile
             {
                 isDragActive ?
                     <p className='flex text-center m-auto'>Drop the files here ...</p> :
-                    <p className='flex text-center m-auto'>Drag 'n' drop some files here, or click to select files</p>
+                    <p className='flex text-center m-auto'>Drag &apos;n&apos; drop some files here, or click to select files</p>
             }
         </div>
     )

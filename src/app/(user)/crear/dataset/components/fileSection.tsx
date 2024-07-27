@@ -11,7 +11,7 @@ const FilesSection = ({ handleChangeFiles }: FilesSectionProps) => (
         <div className='border-b border-morado mb-5 w-auto pr-4'>
             <h1 className='font-notojp text-xl mb-2'>Subir archivos</h1>
         </div>
-        <FieldInputFile onFilesChange={handleChangeFiles} />
+        <FieldInputFile onFilesChange={handleChangeFiles} multiple={true} />
     </section>
 );
 

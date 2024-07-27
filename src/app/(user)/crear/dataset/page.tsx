@@ -4,9 +4,9 @@
 import React from 'react';
 import NavCrear from '@/components/nav/navCrear';
 import { useCrearDataset } from './useCrearDataset';
-import BannerSection from './components/bannerSection';
-import ReadmeSection from './components/readmeSection';
+import BannerSection from '../shared-components/bannerSection';
 import FilesSection from './components/fileSection';
+import ReadmeSection from '../shared-components/readmeSection';
 
 const CrearDataset = () => {
     const {
@@ -33,13 +33,12 @@ const CrearDataset = () => {
         setTitle(newTitle);
         setDescription(newDescription);
     };
-    
 
     return (
         <div className="mx-auto w-5/6 h-full">
             <NavCrear onSubmit={handleSubmit} onCancel={handleCancel} />
-            <BannerSection setHeaderImage={setHeaderImage} handleMetadataChange={handleMetadataChange} accept={accept} />
-            <ReadmeSection readme={readme} setValue={setValue} />
+            <BannerSection setHeaderImage={setHeaderImage} handleMetadataChange={handleMetadataChange} accept={accept} titleHolder='Titulo del Dataset' descriptionHolder='Breve descripcion del Dataset' />
+            <ReadmeSection subtitle='A cerca del Dataset' readme={readme} setValue={setValue} />
             <FilesSection handleChangeFiles={handleChangeFiles} />
         </div>
     );

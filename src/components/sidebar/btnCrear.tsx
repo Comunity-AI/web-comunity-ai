@@ -13,7 +13,7 @@ const lista:DataProps[] = [
         icon: svgs_items.datasets,
     },
     {
-        name: "Model",
+        name: "Modelo",
         icon: svgs_items.cerebrito,
     },
     {

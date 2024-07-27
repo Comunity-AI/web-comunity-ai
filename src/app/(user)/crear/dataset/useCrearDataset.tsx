@@ -1,4 +1,5 @@
-// useCrearDataset.js
+"use client";
+
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
@@ -18,7 +19,7 @@ export const useCrearDataset = () => {
     const handleSubmit = (e:any) => {
         e.preventDefault();
 
-        if (!readme.trim() || files.length === 0) {
+        if (!title.trim() || !description.trim() || !readme.trim() || files.length === 0) {
             return Swal.fire({
                 icon: 'error',
                 title: 'Oops...',

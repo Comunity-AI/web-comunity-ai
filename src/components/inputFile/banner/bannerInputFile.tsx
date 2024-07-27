@@ -8,9 +8,11 @@ interface Props {
     onMetadataChange: (title: string, description: string) => void;
     accept: InputFileProps['accept'];
     onFilesChange: (file: File) => void;
+    titleHolder?:string;
+    descriptionHolder?:string;
 }
 
-export default function BannerInput({ onMetadataChange, onFilesChange, accept }: Props) {
+export default function BannerInput({ onMetadataChange, onFilesChange, accept, titleHolder, descriptionHolder }: Props) {
     const [file, setFileUploads] = useState<File | null>(null);
     const [imageURL, setImageURL] = useState<string | null>(null);
     const [title, setTitle] = useState<string>("");
@@ -61,7 +63,7 @@ export default function BannerInput({ onMetadataChange, onFilesChange, accept }:
                 <div className='inline-flex w-1/2'>
                     <input
                         type="text"
-                        placeholder='Titulo del Dataset'
+                        placeholder={titleHolder}
                         className='bg-transparent text-3xl font-notojp outline-none focus:border-b focus:border-b-blanco'
                         maxLength={50}
                         onChange={handleTitleChange}
@@ -73,7 +75,7 @@ export default function BannerInput({ onMetadataChange, onFilesChange, accept }:
                         id="description"
                         className='w-full resize-none bg-transparent'
                         maxLength={200}
-                        placeholder="Breve descripcion del Dataset"
+                        placeholder={descriptionHolder}
                         onChange={handleDescriptionChange}
                     />
                 </div>

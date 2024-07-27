@@ -3,6 +3,7 @@ import Rol from "./interfaces/rol"
 import Pais from "./pais"
 
 export default class Usuario {
+    private _uuid: string;
     private _username: string;
     private _email: string;
     private _password: string;
@@ -10,12 +11,17 @@ export default class Usuario {
     private _provider_id: string;
     private _foto_perfil: string = "";
 
-    constructor(username: string, email: string, password: string|null, pais:Pais|null) {
+    constructor(uuid:string|null, username: string, email: string, password: string|null, pais:Pais|null) {
+        this._uuid = uuid || "";
         this._username = username;
         this._email = email;
         this._password = password || "";
         this._pais = pais
         this._provider_id = ""
+    }
+
+    get uuid(): string {
+        return this._uuid;
     }
 
     get username(): string {
@@ -59,6 +65,16 @@ export default class Usuario {
         this._foto_perfil = foto_perfil;
     }
 
+    static async getByID(id:string) {
+        const user:Array<any> = await conn.query("SELECT * FROM `usuario` WHERE uuid = ?", [id]);
+        await conn.end()
+        if (user.length == 0) {
+            return null
+        }
+        const pais:Pais|null = await Pais.getById(user[0].pais_id)
+        return new Usuario(user[0].uuid, user[0].username, user[0].email, null, pais)
+    }
+
     static async getByEmail(email: string): Promise<Usuario|null> {
         const user:Array<any> = await conn.query("SELECT * FROM `usuario` WHERE email = ?", [email]);
         await conn.end()
@@ -66,7 +82,7 @@ export default class Usuario {
             return null
         }
         const pais:Pais|null = await Pais.getById(user[0].pais)
-        return new Usuario(user[0].username, user[0].email, null, pais)
+        return new Usuario(user[0].uuid, user[0].username, user[0].email, null, pais)
     }
 
     public async existUser(): Promise<boolean> {
@@ -75,11 +91,11 @@ export default class Usuario {
         return existUser.length > 0
     }
 
-    public async save(): Promise<boolean> {
+    public async save(): Promise<Usuario|null> {
         const rol:Rol[] = await conn.query("SELECT id FROM `rol` WHERE nombre = ?", ["usuario"])
 
-        const saveUser:any = await conn.query("INSERT INTO `usuario` (`uuid`, `username`, `email`, `password`, `rol_id`, `pais_id`, `provider_id`) VALUES (UUID(), ?, ?, ?, ?, ?, ?)", [this.username, this.email, this.password, rol[0].id, this.pais?.id || null, this.providerId]);
+        const saveUser:Usuario|null = await conn.query("INSERT INTO `usuario` (`uuid`, `username`, `email`, `password`, `rol_id`, `pais_id`, `provider_id`) VALUES (UUID(), ?, ?, ?, ?, ?, ?)", [this.username, this.email, this.password, rol[0].id, this.pais?.id || null, this.providerId]);
         await conn.end()
-        return saveUser.affectedRows === 1
+        return saveUser
     }
 }
