@@ -71,7 +71,7 @@ export function useCrearModelo() {
                     text: 'Tu Modelo se ha creado correctamente!!',
                 });
 
-                router.push(`/modelo/${data.id}`);
+                router.push(`/modelos/${data.id}`);
             })
             .catch(err => {
                 Swal.fire({

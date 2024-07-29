@@ -5,7 +5,7 @@ import { useApi } from "@/helpers/cache";
 export const useListPapers = () =>{
     const [currentPage, setCurrentPage] = useState<number>(0);
     const api = `papers?pag=${currentPage}`;
-    const { data: datasets, error, status } = useApi<ResponseList>(api);
+    const { data: papers, error, status } = useApi<ResponseList>(api);
 
     const nextPage = () => {
         setCurrentPage((prevPage) => prevPage + 1);
@@ -15,5 +15,5 @@ export const useListPapers = () =>{
         setCurrentPage((prevPage) => (prevPage > 0 ? prevPage - 1 : 0));
     };
 
-    return { datasets, error, status, currentPage, nextPage, prevPage };
+    return { papers, error, status, currentPage, nextPage, prevPage };
 }

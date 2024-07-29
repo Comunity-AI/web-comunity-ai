@@ -8,7 +8,7 @@ export interface DataPublicacion {
     contenido: string;
     created_at: string;
     autor_name: string;
-    autor: object;
+    autor: any;
 }
 
 export interface ResDataAPI extends DataPublicacion{

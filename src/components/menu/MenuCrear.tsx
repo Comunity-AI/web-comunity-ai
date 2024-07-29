@@ -11,16 +11,17 @@ export interface DataProps {
 interface MenuProps {
     visible: boolean;
     data: DataProps[];
+    isCollapsed: boolean;
     handleClick: (e: MouseEvent<HTMLDivElement>, name: string) => void
 }
 
-export default function MenuCrear({ visible, data, handleClick }: MenuProps) {
+export default function MenuCrear({ visible, data, isCollapsed, handleClick }: MenuProps) {
 
     return (
         <div className={`item absolute w-36 top-0 bg-slate-800 rounded-md z-20 translate-y-14 ${!visible ? "hidden" : "block"}`}>
             {
                 data.map((item, index) => (
-                    <ItemSB name={item.name} icon={item.icon} key={index} active={false} onClick={handleClick} />
+                    <ItemSB name={item.name} icon={item.icon} key={index} active={false} onClick={handleClick} isCollapsed={isCollapsed}/>
                 ))
             }
         </div>

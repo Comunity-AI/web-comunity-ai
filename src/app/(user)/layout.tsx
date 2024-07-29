@@ -29,7 +29,7 @@ export default function DashboardLayout({
   return (
     <section className="flex h-screen">
       <Sidebar title="Comunity AI">
-        <BtnCrear/>
+        <BtnCrear isCollapsed={false}/>
         <ItemSB icon={svgs_items.home} name="Inicio" onClick={handleTab} active={tab == "perfil"} />
         <ItemSB icon={svgs_items.datasets} name="Datasets" onClick={handleTab} active={tab == "Datasets"} />
         <ItemSB icon={svgs_items.cerebrito} name="Modelos" onClick={handleTab} active={tab == "Modelos"} />

@@ -74,7 +74,7 @@ export function usePaper(){
             text: 'El Paper se ha creado correctamente',
         });
 
-        router.push(`/paper/${response.id}`);
+        router.push(`/papers/${response.id}`);
     };
 
     const handleCancel = () => {

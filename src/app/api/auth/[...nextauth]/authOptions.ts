@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
     ],
     callbacks: {
         async signIn({ user, account, profile }) {
-          console.log({email: user.email})
+          console.log({email: user})
           const usuario  = await Usuario.getByEmail(user.email!);
           let currentUser = usuario;
           
@@ -36,7 +36,7 @@ export const authOptions: NextAuthOptions = {
               throw new Error("Login error")
             }
           }
-
+          
           const refreshToken = crypto.randomBytes(32).toString('hex');
           await RefreshToken.upsertToken(crypto.randomUUID(), currentUser!.uuid, refreshToken);
       
@@ -45,6 +45,7 @@ export const authOptions: NextAuthOptions = {
         
         async jwt({ token, user }) {
           if (user) {
+            console.log({user})
             token.id = user.id;
 
             const usuario = await Usuario.getByEmail(user.email!)
@@ -58,6 +59,7 @@ export const authOptions: NextAuthOptions = {
               });
             }
 
+            token.user_uuid = usuario.uuid;
             token.username = usuario.username;
             token.refreshToken = await RefreshToken.getTokenByUserID(usuario.uuid);
 
@@ -81,6 +83,7 @@ export const authOptions: NextAuthOptions = {
         },
         async session({session, token}) {
           if(session.user){
+            session.user.uuid = token.user_uuid;
             session.user.id = token.id;
             session.user.username = token.username;
           }

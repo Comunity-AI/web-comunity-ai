@@ -7,14 +7,9 @@ import Loader from "@/components/utils/loader";
 import { useDataset } from "../useDataset";
 import FileExplorer from "@/components/publicaciones/fileExplorer";
 import NotFound from "@/components/404/bosque";
-import IndexPage from "../index"
 
 export default function ShowDataset({ params }: { params: { id: string } }) {
     const { id } = params;
-
-    if(id === undefined){
-        return <IndexPage/>
-    }
 
     const { data, error, status, notFound, previews, currentPreview, setCurrentPreview } = useDataset(id);
 

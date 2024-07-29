@@ -7,7 +7,7 @@ export interface ResVariacion {
     archivos: object[];
 }
 
-type Framework = {
+export type Framework = {
     [uuid: string]: string;
   };
 

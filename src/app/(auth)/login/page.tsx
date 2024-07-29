@@ -2,12 +2,10 @@
 
 import Image from "next/image";
 import loginImg from '../../../public/imgs/login.jpg'
-import {signIn, useSession} from "next-auth/react"
+import {signIn} from "next-auth/react"
 
 
 export default function Login() {
-    const {data: session} = useSession();
-
     return (
         <>
             <section className="flex min-h-screen bg-[#f7f7f7] dark:bg-transparent">

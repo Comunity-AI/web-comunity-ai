@@ -1,13 +1,12 @@
 "use client";
 
 import { MouseEvent, useState } from "react";
-// import router navigator for navigate other page
 import { useRouter } from "next/navigation";
 
 import MenuCrear, { DataProps } from "../menu/MenuCrear";
 import { svgs_items } from "@/helpers/svgs";
 
-const lista:DataProps[] = [
+const lista: DataProps[] = [
     {
         name: "Dataset",
         icon: svgs_items.datasets,
@@ -22,18 +21,22 @@ const lista:DataProps[] = [
     }
 ]
 
-export default function BtnCrear() {
-    
+interface BtnCrearProps {
+    isCollapsed: boolean;
+}
+
+export default function BtnCrear({ isCollapsed }: BtnCrearProps) {
+
     const [visible, setVisible] = useState(false);
     const router = useRouter();
 
-    function handleMenu(e: MouseEvent<HTMLDivElement>){
+    function handleMenu(e: MouseEvent<HTMLDivElement>) {
         e.preventDefault()
         setVisible(!visible);
-        
+
     }
-    
-    function handleClick(e:MouseEvent<HTMLDivElement>, name:string) {
+
+    function handleClick(e: MouseEvent<HTMLDivElement>, name: string) {
         e.preventDefault()
         const option = name.toLowerCase()
         router.push(`/crear/${option}`);
@@ -44,10 +47,13 @@ export default function BtnCrear() {
             <div className='w-1/5 mr-2'>
                 <span className="material-symbols-outlined">add</span>
             </div>
-            <div className='w-4/5'>
-                Crear
-            </div>
-            <MenuCrear data={lista} handleClick={handleClick} visible={visible}/>
+            {
+                !isCollapsed && 
+                <div className='w-4/5'>
+                    Crear
+                </div>
+            }
+            <MenuCrear data={lista} handleClick={handleClick} visible={visible} isCollapsed={isCollapsed}/>
         </div>
     )
 }
