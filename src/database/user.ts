@@ -91,6 +91,12 @@ export default class Usuario {
         return existUser.length > 0
     }
 
+    static async checkUser(email:string, password:string): Promise<Usuario> {
+        const user:any = await conn.query("SELECT * FROM `usuario`  WHERE email = ? AND  password = ?", [email, password]);
+        await conn.end()
+        return user
+    }
+
     public async save(): Promise<Usuario|null> {
         const rol:Rol[] = await conn.query("SELECT id FROM `rol` WHERE nombre = ?", ["usuario"])
 

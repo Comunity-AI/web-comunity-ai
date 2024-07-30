@@ -11,7 +11,8 @@ export default function Perfil() {
     if (status === "loading") {
         return <Loader />
     }
-    console.log(session?.accessToken)
+
+    
 
     return (
         <section className="w-full">

@@ -27,7 +27,7 @@ export default function DashboardLayout({
   }
 
   return (
-    <section className="flex h-screen">
+    <section className="block md:flex h-screen relative">
       <Sidebar title="Comunity AI">
         <BtnCrear isCollapsed={false}/>
         <ItemSB icon={svgs_items.home} name="Inicio" onClick={handleTab} active={tab == "perfil"} />

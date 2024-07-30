@@ -1,8 +1,17 @@
+"use client";
+
 import Image from "next/image";
 import logo from '@/public/logo.svg'
 import Search from "./searchBox";
+import { useState } from "react";
 
 export default function Navbar() {
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    
+    const toggleMobileMenu = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+    };
+
     return (
         <header className="relative h-14 shadow-md z-50">
             <nav id="navbar" className="bg-opacity-50 backdrop-blur-md fixed top-0 w-full transition-transform duration-300">
@@ -12,6 +21,7 @@ export default function Navbar() {
                         <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                             {/* Mobile menu button */}
                             <button type="button"
+                                onClick={toggleMobileMenu}
                                 className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                                 aria-controls="mobile-menu" aria-expanded="false">
                                 <span className="absolute -inset-0.5"></span>
@@ -26,7 +36,7 @@ export default function Navbar() {
                                 </svg>
                                 {/* Icon when menu is open.
                                 Menu open: "block", Menu closed: "hidden" */}
-                                <svg className="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
+                                <svg className={`hidden h-6 w-6`} fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
                                     stroke="currentColor" aria-hidden="true">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
@@ -35,7 +45,7 @@ export default function Navbar() {
                         {/* tabs */}
                         <div className="w-full justify-between grid grid-cols-3">
                             {/*  logo  */}
-                            <div className="flex flex-shrink-0 items-center">
+                            <div className="hidden md:flex flex-shrink-0 items-center">
                                 <Image 
                                     width={32}
                                     height={32}
@@ -49,12 +59,12 @@ export default function Navbar() {
                                 <div className="hidden sm:ml-6 sm:block">
                                     <div className="flex space-x-4">
                                         {/* Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white"  */}
-                                        <a href="#"
-                                            className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Team</a>
-                                        <a href="/proyectos"
-                                            className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Proyectos</a>
+                                        <a href="/blog"
+                                            className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Blog</a>
+                                        <a href="/modelos"
+                                            className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Modelos</a>
                                         <a href="/login"
-                                            className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Iniciar</a>
+                                            className="text-verde-claro hover:bg-verde-claro/80 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Iniciar</a>
                                     </div>
                                 </div>
                             </div>
@@ -67,17 +77,17 @@ export default function Navbar() {
                 </div>
 
                 {/*  Mobile menu, show/hide based on menu state.  */}
-                <div className="sm:hidden" id="mobile-menu">
-                    <div className="space-y-1 px-2 pb-3 pt-2">
+                <div className={`sm:hidden transition-all duration-300 ${isMobileMenuOpen ? 'h-auto translate-x-0' : 'h-0 -translate-x-full'}`} id="mobile-menu">
+                    <div className={`space-y-1 px-2 pb-3 pt-2`}>
                         {/*  Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white"  */}
                         <a href="#" className="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium"
-                            aria-current="page">Dashboard</a>
-                        <a href="#"
-                            className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Team</a>
-                        <a href="#"
-                            className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Projects</a>
+                            aria-current="page">Home</a>
+                        <a href="/blog"
+                            className="text-gray-500 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Blog</a>
+                        <a href="/modelos"
+                            className="text-gray-500 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Modelos</a>
                         <a href="/login"
-                            className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Iniciar</a>
+                            className="text-gray-200 bg-verde-claro/80 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Iniciar</a>
                     </div>
                 </div>
             </nav>

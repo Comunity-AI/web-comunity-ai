@@ -30,7 +30,7 @@ export default function ListDatasets() {
 
     return (
         <div className="w-full h-full grid grid-rows-12 m-auto">
-            <section className="pt-8 row-span-11 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <section className="pt-8 row-span-11 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 justify-center">
                 {
                     modelos && modelos.count > 0 ? (
                         <>

@@ -6,7 +6,7 @@ export async function POST(req:NextRequest){
     const {email, username, pais, password} = await req.json();
     if(!email || !username || !pais) return NextResponse.json({message: "Faltan datos", status:false})
 
-    const usuario = new Usuario(username, email, password, null);
+    const usuario = new Usuario(null, username, email, password, null);
 
     const existUser:boolean = await (usuario.existUser())
     if(existUser){
