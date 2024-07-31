@@ -1,23 +1,36 @@
 import { conn } from "./db"
 import Rol from "./interfaces/rol"
 import Pais from "./pais"
+import { hashPassword } from "@/utils/functions"
+
+interface UserData {
+    nombres: string;
+    username: string;
+    email: string;
+    rawPassword: string;
+    pais: Pais | null;
+}
 
 export default class Usuario {
+    public id: string = '';
     private _uuid: string;
     private _username: string;
     private _email: string;
     private _password: string;
+    private _bio: string = "";
     private _pais: Pais|null;
-    private _provider_id: string;
+    private _provider_id: string | null;
     private _foto_perfil: string = "";
 
-    constructor(uuid:string|null, username: string, email: string, password: string|null, pais:Pais|null) {
+    constructor(uuid:string|null, username: string, email: string, password: string|null, pais:Pais|null, nombres?:string, bio?:string) {
         this._uuid = uuid || "";
         this._username = username;
         this._email = email;
         this._password = password || "";
         this._pais = pais
         this._provider_id = ""
+        if (nombres) this._username = nombres
+        if (bio) this._bio = bio
     }
 
     get uuid(): string {
@@ -27,9 +40,15 @@ export default class Usuario {
     get username(): string {
         return this._username;
     }
-
     set username(username: string) {
         this._username = username;
+    }
+
+    get nombres(): string {
+        return this._username;
+    }
+    set nombres(nombres: string) {
+        this._username = nombres;
     }
 
     get email(): string {
@@ -44,6 +63,13 @@ export default class Usuario {
         return this._password;
     }
 
+    get bio(): string {
+        return this._bio;
+    }
+    set bio(bio: string) {
+        this._bio = bio;
+    }
+
     get pais(): Pais|null {
         return this._pais;
     }
@@ -51,10 +77,10 @@ export default class Usuario {
         this._pais = pais;
     }
 
-    get providerId(): string {
+    get providerId(): string|null {
         return this._provider_id;
     }
-    set providerId(provider_id: string) {
+    set providerId(provider_id: string|null) {
         this._provider_id = provider_id;
     }
 
@@ -72,7 +98,7 @@ export default class Usuario {
             return null
         }
         const pais:Pais|null = await Pais.getById(user[0].pais_id)
-        return new Usuario(user[0].uuid, user[0].username, user[0].email, null, pais)
+        return new Usuario(user[0].uuid, user[0].username, user[0].email, null, pais, user[0].bio)
     }
 
     static async getByEmail(email: string): Promise<Usuario|null> {
@@ -82,21 +108,32 @@ export default class Usuario {
             return null
         }
         const pais:Pais|null = await Pais.getById(user[0].pais)
-        return new Usuario(user[0].uuid, user[0].username, user[0].email, null, pais)
+        return new Usuario(user[0].uuid, user[0].username, user[0].email, null, pais, user[0].bio)
     }
 
+    static async create(userData: UserData): Promise<Usuario|null> {
+        const hashedPassword = await hashPassword(userData.rawPassword)
+        return await (new Usuario(null, userData.username, userData.email, hashedPassword, userData.pais, userData.nombres, '')).save()
+    }
     public async existUser(): Promise<boolean> {
         const existUser:Array<any> = await conn.query("SELECT * FROM `usuario` WHERE email = ? OR username = ?", [this.email, this.username]);
         await conn.end()
         return existUser.length > 0
     }
 
-    static async checkUser(email:string, password:string): Promise<Usuario> {
-        const user:any = await conn.query("SELECT * FROM `usuario`  WHERE email = ? AND  password = ?", [email, password]);
+    static async checkUser(email:string, rawPassword:string): Promise<Usuario> {
+        const hashedPassword = await hashPassword(rawPassword)
+        const user:any = await conn.query("SELECT * FROM `usuario`  WHERE email = ? AND  password = ?", [email, hashedPassword]);
         await conn.end()
         return user
     }
 
+    static async updateUserProfile(id:string, data:{bio:string, username:string}) : Promise<any|null> {
+        const user:Usuario|null = await conn.query("UPDATE `usuario` SET `username` = ?, `bio` = ? WHERE `uuid` = ?", [data.username, data.bio, id]);
+        await conn.end()
+        return user
+    }
+    
     public async save(): Promise<Usuario|null> {
         const rol:Rol[] = await conn.query("SELECT id FROM `rol` WHERE nombre = ?", ["usuario"])
 

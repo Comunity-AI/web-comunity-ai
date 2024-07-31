@@ -16,18 +16,17 @@ const ItemSB: React.FC<itemProps> = ({ name, icon, active, onClick, isCollapsed,
             onClick={(e) => onClick(e, name)} 
             {...props}
         >
-            <div className="w-1/5">
+            <div className="flex w-1/5 items-center">
                 {typeof icon === 'string' ? (
                     <img src={icon} alt="icon" className="size-6" />
                 ) : (
                     <div className="size-6">{icon}</div>
                 )}
             </div>
-            {!isCollapsed && (
-                <div className="w-4/5 text-m font-notojp">
-                    {name}
-                </div>
-            )}
+            {
+                !isCollapsed && 
+                <div className="w-4/5 text-md font-notojp">{name}</div>
+            }
         </div>
     )
 }

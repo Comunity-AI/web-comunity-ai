@@ -1,6 +1,8 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
 interface PanelRegistroProps {
     loginActive: boolean
@@ -8,6 +10,27 @@ interface PanelRegistroProps {
 }
 
 export default function PanelRegistro({ loginActive, setLoginActive }:PanelRegistroProps) {
+    const [nombres, setNombres] = useState<string>('');
+    const [username, setUsername] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const router = useRouter();
+
+    const handleRegister = async (event: React.FormEvent) => {
+        event.preventDefault();
+        const response = await fetch('/api/user/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, nombres, username, password }),
+        });
+        if (response.ok) {
+            console.log("Registration successful");
+            router.push('/perfil')
+        } else {
+            console.error("Registration failed");
+        }
+    };
+
     return (
         <div className={`flex-col justify-center flex-1 px-6 py-8 sm:px-12 lg:flex-none lg:px-20 xl:px-24 transition-all duration-300 ${loginActive ? 'hidden w-0 translate-x-full' : 'flex -translate-x-0 w-1/3'}`}>
             <div className="w-full max-w-xl mx-auto lg:w-96">
@@ -32,19 +55,21 @@ export default function PanelRegistro({ loginActive, setLoginActive }:PanelRegis
                 </div>
                 <div className="mt-8">
                     <div className="mt-6">
-                        <form id="form" className="space-y-6">
+                        <form id="form" className="space-y-6" onSubmit={handleRegister}>
                             <div>
                                 <label
                                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only"
                                     htmlFor="email"
                                 >
-                                    Nombres
+                                    Email
                                 </label>
                                 <input
-                                    className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
+                                    className="flex text-black h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
                                     type="text"
                                     placeholder="email@mail.com"
                                     required={true}
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     name="email"
                                 />
                             </div>
@@ -56,10 +81,12 @@ export default function PanelRegistro({ loginActive, setLoginActive }:PanelRegis
                                     Nombres
                                 </label>
                                 <input
-                                    className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
+                                    className="flex text-black h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
                                     type="text"
                                     placeholder="Nombres"
                                     required={true}
+                                    value={nombres}
+                                    onChange={(e) => setNombres(e.target.value)}
                                     name="nombres"
                                 />
                             </div>
@@ -71,10 +98,12 @@ export default function PanelRegistro({ loginActive, setLoginActive }:PanelRegis
                                     Username
                                 </label>
                                 <input
-                                    className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
+                                    className="flex text-black h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
                                     type="text"
                                     placeholder="Username"
                                     required={true}
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
                                     name="username"
                                 />
                             </div>
@@ -86,11 +115,13 @@ export default function PanelRegistro({ loginActive, setLoginActive }:PanelRegis
                                     Password
                                 </label>
                                 <input
-                                    className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
+                                    className="flex text-black h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
                                     type="password"
                                     id="password"
                                     placeholder="Password"
                                     required={true}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                     name="password"
                                 />
                             </div>

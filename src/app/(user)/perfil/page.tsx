@@ -3,24 +3,47 @@
 import Loader from "@/components/utils/loader";
 import { useSession } from "next-auth/react";
 import React from "react";
+import usePerfil from "./usePerfil";
+import BioInputText from "./components/textBio";
 
 export default function Perfil() {
-    const { data: session, status } = useSession()
-    const user = session?.user
+    const {
+        user, status,
+        username, setUsername,
+        editUsername, setEditUsername,
+        bio, lenBio, setBio,
+        editBio, setEditBio,
+        activeEdit, handlerActiveEdit,
+        handleSave,
+    } = usePerfil()
 
     if (status === "loading") {
         return <Loader />
     }
 
-    
+    console.log({ user, username, bio })
 
     return (
         <section className="w-full">
             <div className="min-h-scree w-full text-white">
                 <header className="flex items-center justify-between p-4 border-b">
-                    <button className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input h-9 rounded-md px-3 hover:text-verde-claro hover:border-verde-claro">
-                        Editar perfil
-                    </button>
+                    <div className="inline-flex">
+                        {
+                            activeEdit ?
+                                <div>
+                                    <button className="mr-3 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input h-9 rounded-md px-3 text-verde-claro border-verde-claro hover:text-white hover:bg-verde-claro" onClick={handleSave}>
+                                        Guardar
+                                    </button>
+                                    <button className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input h-9 rounded-md px-3 text-rose-500 border-rose-500 hover:bg-rose-500 hover:text-white" onClick={() => handlerActiveEdit(false)}>
+                                        Cancelar
+                                    </button>
+                                </div>
+                                :
+                                <button className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input h-9 rounded-md px-3 hover:text-verde-claro hover:border-verde-claro" onClick={() => handlerActiveEdit(true)}>
+                                    Editar perfil
+                                </button>
+                        }
+                    </div>
                     <div className="flex items-center space-x-4">
                         <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 w-10">
                             <svg
@@ -64,7 +87,7 @@ export default function Perfil() {
                         <div className="absolute top-0 left-5 w-10 h-10 rounded-full bg-verde-claro shadow-lg"></div>
                         <div className="absolute right-5 bottom-8 w-44 h-44 rounded-full bg-verde shadow-2xl"></div>
                         <div className="absolute right-20 bottom-0 w-44 h-44 rounded-full bg-morado shadow-2xl"></div>
-                        
+
                         <div
                             className="backdrop-filter backdrop-blur-md bg-opacity-100 font-notojp flex flex-col md:flex-row md:items-center md:justify-between p-6 rounded-xl shadow"
                             data-v0-t="card"
@@ -81,7 +104,13 @@ export default function Perfil() {
                                 />
                                 <div>
                                     <p className="text-sm text-muted-foreground">{user?.name}</p>
-                                    <h1 className="text-2xl font-bold">{user?.username}</h1>
+                                    {
+                                        activeEdit ?
+                                            <input type="text" maxLength={20} className="text-2xl font-bold bg-transparent border-b border-b-morado" value={editUsername} onChange={(v) => setEditUsername(v.target.value || '')} />
+                                            :
+                                            <h1 className="text-2xl font-bold">{username}</h1>
+
+                                    }
                                     <p className="text-sm text-muted-foreground flex items-center space-x-2">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -118,7 +147,13 @@ export default function Perfil() {
                                 className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 py-4 duration-75"
                             >
                                 <h2 className="text-xl font-bold">Bio</h2>
-                                <p className="mt-2 text-muted-foreground">This is the bio section.</p>
+                                {
+                                    activeEdit ?
+                                        <BioInputText bio={editBio} lenBio={lenBio} handleChangeBio={(v) => setEditBio(v.target.value)} />
+                                        :
+                                        <p className="mt-2 text-muted-foreground">{bio || 'This is the bio section'}.</p>
+
+                                }
                             </div>
                         </div>
                     </div>

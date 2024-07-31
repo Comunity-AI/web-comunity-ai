@@ -15,7 +15,7 @@ export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       credentials: {
-        email: { label: "Username", type: "text", placeholder: "jsmith" },
+        email: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials, req) {
@@ -28,8 +28,7 @@ export const authOptions: NextAuthOptions = {
         }
         const isValid = await Usuario.checkUser(credentials.email, credentials.password); // Verifica la contraseña
         if (!isValid) {
-          return null
-          // throw new Error('Invalid password');
+          throw new Error('Invalid password');
         }
         return user
       }
@@ -45,13 +44,13 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      console.log({ email: user })
       const usuario = await Usuario.getByEmail(user.email!);
       let currentUser = usuario;
 
       if (!usuario) {
-        const newUsuario = new Usuario(null, user.name!.split(" ")[0] + user.id.slice(0, 6), user.email!, "", null);
-        newUsuario.providerId = user.id
+        const userID = user.id?.slice(0, 6) || crypto.randomBytes(6).toString('hex')
+        const newUsuario = new Usuario(null, user.name!.split(" ")[0] + userID, user.email!, "", null);
+        newUsuario.providerId = user.id || null;
         newUsuario.profilePhoto = user.image!;
         currentUser = await newUsuario.save();
         if (!currentUser) {
@@ -67,9 +66,10 @@ export const authOptions: NextAuthOptions = {
 
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
+        token.id = user?.id || '';
 
         const usuario = await Usuario.getByEmail(user.email!)
+        console.log({usuario})
         if (!usuario) {
           throw new Error("Login error")
         }
@@ -79,7 +79,11 @@ export const authOptions: NextAuthOptions = {
             token.pais = pais;
           });
         }
-
+        token.user = {
+          bio: usuario.bio, 
+          uuid: usuario.uuid,
+          username: usuario.username,
+        }
         token.user_uuid = usuario.uuid;
         token.username = usuario.username;
         token.refreshToken = await RefreshToken.getTokenByUserID(usuario.uuid);
@@ -91,6 +95,7 @@ export const authOptions: NextAuthOptions = {
             email: user.email,
             username: usuario.username,
             name: user.name,
+            bio: usuario.bio,
           },
           process.env.NEXTAUTH_SECRET!,
           { expiresIn: '3d' }
@@ -105,6 +110,7 @@ export const authOptions: NextAuthOptions = {
         session.user.uuid = token.user_uuid;
         session.user.id = token.id;
         session.user.username = token.username;
+        session.user.bio = token.user.bio;
       }
       session.accessToken = token.accessToken;
       return session;

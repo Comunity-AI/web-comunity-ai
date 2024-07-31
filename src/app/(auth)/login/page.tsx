@@ -6,12 +6,15 @@ import { signIn } from "next-auth/react"
 import { useState } from "react";
 import PanelRegistro from "../components/panelRegistro";
 import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 
 export default function Login() {
     const [loginActive, setLoginActive] = useState<boolean>(true)
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    
+    const router = useRouter();
 
     const handleLogin = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -26,6 +29,8 @@ export default function Login() {
                 title: 'Oops...',
                 text: 'Contraseña o username incorrectos',
             })
+        } else {
+            router.push('/perfil'); // Usa router aquí
         }
     };
 
@@ -66,7 +71,7 @@ export default function Login() {
                                         Email
                                     </label>
                                     <input
-                                        className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
+                                        className="flex h-10 rounded-md border border-input text-black px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
                                         type="email"
                                         placeholder="email@mail.com"
                                         required={true}
@@ -82,7 +87,7 @@ export default function Login() {
                                         Password
                                     </label>
                                     <input
-                                        className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
+                                        className="flex h-10 rounded-md border border-input text-black px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
                                         type="password"
                                         id="password"
                                         placeholder="Password"

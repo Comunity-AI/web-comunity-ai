@@ -9,6 +9,7 @@ import { MouseEvent, useState } from "react";
 import { signOut } from "next-auth/react"
 
 import { svgs_items } from "@/helpers/svgs"
+import BtnSalir from "@/components/sidebar/btnSalir";
 
 export default function DashboardLayout({
   children,
@@ -35,12 +36,7 @@ export default function DashboardLayout({
         <ItemSB icon={svgs_items.cerebrito} name="Modelos" onClick={handleTab} active={tab == "Modelos"} />
         <ItemSB icon={svgs_items.paper} name="Papers" onClick={handleTab} active={tab == "Papers"} />
         <ItemSB icon={svgs_items.learn} name="Aprender" onClick={handleTab} active={tab == "Aprender"} />
-        <div>
-
-          <button onClick={() => signOut()}>
-            Cerrar sesión
-          </button>
-        </div>
+        <BtnSalir handleClick={() => signOut()} isCollapsed={false} />
       </Sidebar>
       <section className="px-4 w-full max-h-full overflow-y-scroll">
         {children}

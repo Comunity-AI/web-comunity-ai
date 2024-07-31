@@ -49,9 +49,7 @@ export default function BtnCrear({ isCollapsed }: BtnCrearProps) {
             </div>
             {
                 !isCollapsed && 
-                <div className='w-4/5'>
-                    Crear
-                </div>
+                <div className='w-4/5 text-md font-notojp'>Crear</div>
             }
             <MenuCrear data={lista} handleClick={handleClick} visible={visible} isCollapsed={isCollapsed}/>
         </div>

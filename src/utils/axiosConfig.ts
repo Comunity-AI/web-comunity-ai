@@ -22,7 +22,7 @@ axiosInstance.interceptors.response.use(
 
       try {
         const refreshToken = localStorage.getItem('refreshToken');
-        const response = await axios.post('/api/refresh-token', { refreshToken });
+        const response = await axios.post('/api/user/refresh-token', { refreshToken });
         const { accessToken } = response.data;
 
         // Guarda el nuevo access token
