@@ -1,3 +1,4 @@
+import { FieldPacket } from "mysql2";
 import { conn } from "./db";
 
 interface RefreshTokenRecord {
@@ -29,8 +30,8 @@ export default class RefreshToken {
   static async getToken(refreshToken: string): Promise<RefreshTokenRecord | null> {
     try {
       const query = `SELECT * FROM ${this.tableName} WHERE token = ?`;
-      const [rows] = await conn.query<RefreshTokenRecord[]>(query, [refreshToken]);
-      // @ts-ignore
+      const [resRows]:[any, FieldPacket[]] = await conn.query(query, [refreshToken]);
+      const rows: RefreshTokenRecord[] = resRows as RefreshTokenRecord[];
       return rows[0] || null; // Devuelve null si no se encuentra ningún registro
     } catch (error) {
       console.error("Error retrieving refresh token:", error);
@@ -52,8 +53,8 @@ export default class RefreshToken {
   static async getTokenByUserID(userId: string): Promise<RefreshTokenRecord | null> {
     try {
       const query = `SELECT * FROM ${this.tableName} WHERE user_id = ?`;
-      const rows = await conn.query<RefreshTokenRecord[]>(query, [userId]);
-      // @ts-ignore
+      const [resRows]:[any, FieldPacket[]] = await conn.query(query, [userId]);
+      const rows: RefreshTokenRecord[] = resRows as RefreshTokenRecord[];
       return rows[0] || null; // Devuelve null si no se encuentra ningún registro
     } catch (error) {
       console.error("Error retrieving refresh token:", error);

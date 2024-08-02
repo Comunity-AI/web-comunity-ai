@@ -1,3 +1,4 @@
+import { FieldPacket } from "mysql2";
 import { conn } from "./db"
 
 export default class Pais {
@@ -37,15 +38,19 @@ export default class Pais {
         return this._long_num_telf;
     }
 
-    static async getById(id:string): Promise<Pais> {
-        const res:Pais = await conn.query("SELECT * FROM pais WHERE id = ?", [id])
-        await conn.end()
-        return res
+
+    static async getById(id: string): Promise<Pais | null> {
+        const [rows]: [any, FieldPacket[]] = await conn.query("SELECT * FROM pais WHERE id = ?", [id]);
+        if (Array.isArray(rows)) {
+            return (rows as Pais[])[0] || null; // Retorna el primer resultado o null si no hay resultados
+        }
+        return null;
     }
 
-    static async getByName(nombre:string): Promise<Pais> {
-        const res:Pais = await conn.query("SELECT * FROM pais WHERE nombre = ?", [nombre])
-        await conn.end()
-        return res
-    }
+    static async getByName(nombre: string): Promise<Pais | null> {
+        const [rows]: [any, FieldPacket[]] = await conn.query("SELECT * FROM pais WHERE nombre = ?", [nombre]);
+        if (Array.isArray(rows)) {
+            return (rows as Pais[])[0] || null; // Retorna el primer resultado o null si no hay resultados
+        }
+        return null;    }
 }

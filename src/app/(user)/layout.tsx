@@ -32,7 +32,7 @@ export default function DashboardLayout({
     <section className="block md:flex h-screen relative">
       <Sidebar title="Comunity AI">
         {
-          session?.user &&
+          session?.user && status == "authenticated" &&
           <BtnCrear isCollapsed={false} />
         }
         <ItemSB icon={svgs_items.home} name="Inicio" onClick={handleTab} active={tab == "perfil"} />

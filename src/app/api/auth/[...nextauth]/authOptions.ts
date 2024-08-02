@@ -57,7 +57,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Login error")
         }
       }
-
+      // console.log({currentUser})
       const refreshToken = crypto.randomBytes(32).toString('hex');
       await RefreshToken.upsertToken(crypto.randomUUID(), currentUser!.uuid, refreshToken);
 
