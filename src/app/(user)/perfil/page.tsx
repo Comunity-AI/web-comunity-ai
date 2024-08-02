@@ -1,7 +1,6 @@
 "use client";
 
 import Loader from "@/components/utils/loader";
-import { useSession } from "next-auth/react";
 import React from "react";
 import usePerfil from "./usePerfil";
 import BioInputText from "./components/textBio";
@@ -9,9 +8,9 @@ import BioInputText from "./components/textBio";
 export default function Perfil() {
     const {
         user, status,
-        username, setUsername,
+        username,
         editUsername, setEditUsername,
-        bio, lenBio, setBio,
+        bio, lenBio,
         editBio, setEditBio,
         activeEdit, handlerActiveEdit,
         handleSave,
@@ -20,8 +19,6 @@ export default function Perfil() {
     if (status === "loading") {
         return <Loader />
     }
-
-    console.log({ user, username, bio })
 
     return (
         <section className="w-full">
