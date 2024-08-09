@@ -5,7 +5,8 @@ import Preview from "@/components/publicaciones/preview/preview";
 import Loader from "@/components/utils/loader";
 import { usePaper } from "../usePaper";
 import FileExplorer from "@/components/publicaciones/fileExplorer";
-import NotFound from "@/components/404/bosque";
+import NotFound from "@/components/errors/404/bosque";
+import Error500 from "@/components/errors/500/500";
 
 export default function ShowPaper({ params }: { params: { id: string } }) {
     const { id } = params;
@@ -20,7 +21,7 @@ export default function ShowPaper({ params }: { params: { id: string } }) {
     }
 
     if (error) {
-        return <div>Error: {error}</div>;
+        return <Error500 />;
     }
 
     if (!data) {

@@ -3,10 +3,11 @@
 import React from "react";
 import { useModelo } from "./useShowModelo";
 import Loader from "@/components/utils/loader";
-import NotFound from "@/components/404/bosque";
+import NotFound from "@/components/errors/404/bosque";
 import Banner from "@/components/publicaciones/banner/banner";
 import VariationCard from "@/app/(user)/(show)/modelos/components/card/variationCard";
 import { useSession } from "next-auth/react";
+import Error500 from "@/components/errors/500/500";
 
 export default function Modelos({ params }: { params: { id: string } }) {
     const { id } = params;
@@ -35,7 +36,7 @@ export default function Modelos({ params }: { params: { id: string } }) {
     }
 
     if (modeloError) {
-        return <div>Error: {modeloError}</div>;
+        return <Error500 />;
     }
 
     if (!modeloData) {

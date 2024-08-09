@@ -3,6 +3,7 @@
 
 import Image from "next/image";
 import bannerImage from '@/public/imgs/banner.jpg'
+import banner2Image from '@/public/imgs/banner2.jpg'
 import { useEffect } from 'react';
 
 const Carousel = () => {
@@ -72,7 +73,7 @@ const Carousel = () => {
                                 src={bannerImage}
                                 alt="Banner"
                                 fill
-                                style={{objectFit:"cover", objectPosition:"center"}}
+                                style={{ objectFit: "cover", objectPosition: "center" }}
                             />
                         </div>
                         <div className="h-full w-full flex justify-start">
@@ -87,13 +88,22 @@ const Carousel = () => {
                 </div>
 
                 <div className="slide absolute inset-0 transition-opacity duration-1000 opacity-0">
-                    <div className="bg-cover bg-top h-full text-white py-24 px-10 object-cover" style={{ backgroundImage: "https://images.unsplash.com/photo-1544144433-d50aff500b91?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80" }}>
-                        <p className="font-bold text-sm uppercase">Services</p>
-                        <p className="text-3xl font-bold">Hello world</p>
-                        <p className="text-2xl mb-10 leading-none">Carousel with TailwindCSS and jQuery</p>
-                        <a href="#"
-                            className="bg-purple-800 py-4 px-8 text-white font-bold uppercase text-xs rounded hover:bg-gray-200 hover:text-gray-800">Contact
-                            us</a>
+                    <div className="bg-cover bg-top h-full text-white py-24 px-10 object-cover">
+                        <div className="absolute inset-0 -z-10">
+                            <Image
+                                src={banner2Image}
+                                alt="Banner"
+                                fill
+                                style={{ objectFit: "cover", objectPosition: "center" }}
+                            />
+                        </div>
+                        <div className="h-full w-full flex justify-start">
+                            <div className="my-auto">
+                                <p className="text-3xl font-bold">Lo verdadero Open Source</p>
+                                <p className="text-2xl mb-10 leading-none">Carousel with TailwindCSS and jQuery</p>
+                                <a href="/explorar" className="bg-purple-800 py-4 px-8 text-white font-bold uppercase text-xs rounded hover:bg-gray-200 hover:text-gray-800">Explorar</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
