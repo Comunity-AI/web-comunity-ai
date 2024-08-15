@@ -1,20 +1,79 @@
-'use client';
+// app/blog/page.tsx
+"use client";
+import Navbar from '@/components/nav/navbar';
+import Image from 'next/image';
+import bannerImage from '@/public/imgs/banner.jpg';
+import principal from '@/public/imgs/principal.jpg';
+import { client, getArticles } from '@/utils/contentful';
+import { useEffect, useState } from 'react';
 
-import Navbar from "@/components/nav/navbar";
-import Image from "next/image";
-import bannerImage from "@/public/imgs/banner.jpg";
-import principal from "@/public/imgs/principal.jpg";
-import { useEffect } from "react";
+interface Tag {
+    sys: {
+        id: string;
+        linkType: string;
+    }
+}
+
+interface FeaturedImage {
+    fields: {
+        file: {
+            url: string;
+        };
+    };
+}
+
+interface Fields {
+    category: string;
+    slug: string;
+    title: string;
+    content: string;
+    featuredImage: FeaturedImage;
+}
+
+interface Article {
+    sys: {
+        id: string;
+    };
+    metadata: {
+        tags: Tag[];
+    };
+    fields: Fields;
+    createdAt: string;
+}
+
+interface Articulos {
+    News: Article[],
+    Research: Article[],
+    Blog: Article[],
+    [key: string]: Article[]
+}
+
+function groupByCategory(items: Article[]): Record<string, Article[]> {
+    return items.reduce((acc: Record<string, Article[]>, item: Article) => {
+        const category = item.fields.category;
+        if (!acc[category]) {
+            acc[category] = [];
+        }
+        acc[category].push(item);
+        return acc;
+    }, {});
+}
 
 export default function Blog() {
+    type Articulos = Record<string, Article[]>;
+    const [articulos, setArticulos] = useState<Articulos>({});
+
     useEffect(() => {
-        const newsImgs: NodeListOf<Element> = document.querySelectorAll('.card')
-        newsImgs.forEach((div) => {
-            const img = div.querySelector('img')
-            div.addEventListener('mouseenter', () => img?.classList.add('scale-105'))
-            div.addEventListener('mouseleave', () => img?.classList.remove('scale-105'))
-        })
-    })
+        const fetchArticles = async () => {
+            const response = await getArticles();
+            console.log(response[0].fields);
+            //@ts-ignore
+            setArticulos(groupByCategory(response.map(r => r.fields?.featuredBlogPost)));
+        };
+
+        fetchArticles();
+    }, []);
+
     return (
         <>
             <Navbar />
@@ -65,32 +124,40 @@ export default function Blog() {
                     </div>
                 </div>
                 <div className="mt-7">
-                    <div>
-                        <div className="w-16 border-b-2 border-b-morado">
-                            <p className="text-xl font-notojp text-verde">News</p>
-                        </div>
-                    </div>
-                    <div className="my-7 grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div className="card w-auto h-72 relative rounded-xl overflow-hidden shadow-md">
-                            <div className="absolute w-full h-full">
-                                <Image
-                                    className="w-full h-full transition-all ease-in-out duration-500 hover:scale-110"
-                                    src={bannerImage}
-                                    alt="Banner"
-                                />
-                            </div>
-                            <div className="flex py-5 relative h-full">
-                                <button className="bg-morado text-purple-300 rounded-xl px-3 py-1 absolute right-2 text-sm hover:scale-105 hover:text-blanco">
-                                    AI
-                                </button>
-                                <div className="absolute px-5 bottom-2 py-2 font-notojp font-semibold text-md">
-                                    100 things we announced at I/O 2024
+                    {
+                        Object.keys(articulos).map((category) => (
+                            <>
+                                <div>
+                                    <div className="w-16 border-b-2 border-b-morado">
+                                        <p className="text-xl font-notojp text-verde capitalize">{category}</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
+                                <div className="my-7 grid grid-cols-1 md:grid-cols-4 gap-4">
+                                    {articulos[category].map((article:Article) => (
+                                        <div key={article.sys.id} className="card w-auto h-72 relative rounded-xl overflow-hidden shadow-md">
+                                            <div className="absolute w-full h-full">
+                                                <img
+                                                    className="w-full h-full transition-all ease-in-out duration-500 hover:scale-110"
+                                                    src={article.fields.featuredImage.fields.file.url}
+                                                    alt={article.fields.title}
+                                                />
+                                            </div>
+                                            <div className="flex py-5 relative h-full">
+                                                <button className="bg-morado text-purple-300 rounded-xl px-3 py-1 absolute right-2 text-sm hover:scale-105 hover:text-blanco">
+                                                    {article.metadata.tags[0].sys.id}
+                                                </button>
+                                                <div className="absolute px-5 bottom-2 py-2 font-notojp font-semibold text-md text-white">
+                                                    {article.fields.title}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
+                        ))
+                    }
                 </div>
             </section>
         </>
-    )
+    );
 }
