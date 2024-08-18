@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@auth/typeorm-adapter": "^2.4.1",
+    "@contentful/rich-text-react-renderer": "^15.22.9",
     "@uiw/react-json-view": "^2.0.0-alpha.24",
     "@uiw/react-md-editor": "^4.0.4",
     "axios": "^1.7.2",

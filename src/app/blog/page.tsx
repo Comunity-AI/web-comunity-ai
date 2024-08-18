@@ -4,49 +4,10 @@ import Navbar from '@/components/nav/navbar';
 import Image from 'next/image';
 import bannerImage from '@/public/imgs/banner.jpg';
 import principal from '@/public/imgs/principal.jpg';
-import { client, getArticles } from '@/utils/contentful';
+import { getArticles } from '@/utils/contentful';
 import { useEffect, useState } from 'react';
-
-interface Tag {
-    sys: {
-        id: string;
-        linkType: string;
-    }
-}
-
-interface FeaturedImage {
-    fields: {
-        file: {
-            url: string;
-        };
-    };
-}
-
-interface Fields {
-    category: string;
-    slug: string;
-    title: string;
-    content: string;
-    featuredImage: FeaturedImage;
-}
-
-interface Article {
-    sys: {
-        id: string;
-    };
-    metadata: {
-        tags: Tag[];
-    };
-    fields: Fields;
-    createdAt: string;
-}
-
-interface Articulos {
-    News: Article[],
-    Research: Article[],
-    Blog: Article[],
-    [key: string]: Article[]
-}
+import { useRouter } from "next/navigation";
+import { Article } from './interfaces';
 
 function groupByCategory(items: Article[]): Record<string, Article[]> {
     return items.reduce((acc: Record<string, Article[]>, item: Article) => {
@@ -62,6 +23,11 @@ function groupByCategory(items: Article[]): Record<string, Article[]> {
 export default function Blog() {
     type Articulos = Record<string, Article[]>;
     const [articulos, setArticulos] = useState<Articulos>({});
+    const router = useRouter();
+
+    function viewBlog(category:string, slug: string){
+        router.push(`blog/${category}/${slug}`)
+    }
 
     useEffect(() => {
         const fetchArticles = async () => {
@@ -126,7 +92,7 @@ export default function Blog() {
                 <div className="mt-7">
                     {
                         Object.keys(articulos).map((category) => (
-                            <>
+                            <div>
                                 <div>
                                     <div className="w-16 border-b-2 border-b-morado">
                                         <p className="text-xl font-notojp text-verde capitalize">{category}</p>
@@ -134,7 +100,7 @@ export default function Blog() {
                                 </div>
                                 <div className="my-7 grid grid-cols-1 md:grid-cols-4 gap-4">
                                     {articulos[category].map((article:Article) => (
-                                        <div key={article.sys.id} className="card w-auto h-72 relative rounded-xl overflow-hidden shadow-md">
+                                        <div onClick={()=>viewBlog(article.fields.category, article.fields.slug)} key={article.sys.id} className="card w-auto h-72 relative rounded-xl overflow-hidden shadow-md">
                                             <div className="absolute w-full h-full">
                                                 <img
                                                     className="w-full h-full transition-all ease-in-out duration-500 hover:scale-110"
@@ -153,7 +119,7 @@ export default function Blog() {
                                         </div>
                                     ))}
                                 </div>
-                            </>
+                            </div>
                         ))
                     }
                 </div>
