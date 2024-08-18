@@ -7,22 +7,30 @@ import ImgBanner from "../components/imgBanner";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Error500 from "@/components/errors/500/500";
 import Loader from "@/components/utils/loader";
+import NotFound from "@/components/errors/404/bosque";
 
 
 export default function RouteBlog({ params }: { params: { tag: string[] } }) {
+    if(params.tag.length < 2){
+        return <div className="h-screen flex m-auto"><NotFound /></div>;
+    }
+
     const [article, setArticle] = useState<Article | null>(null);
+    const [error404, setError404] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchArticle = async () => {
             try {
-                console.log(params.tag[1])
                 const items = await getArticleBySlug(params.tag[1]);
-                console.log({ items });
-                setArticle((items as Article));
+                if(items){
+                    setArticle((items as Article));
+                }
+                else {
+                    setError404('No se pudo encontrar el artículo');
+                }
             } catch (err) {
                 setError('No se pudo cargar el artículo');
-                console.error(err);
             }
         };
 
@@ -31,6 +39,10 @@ export default function RouteBlog({ params }: { params: { tag: string[] } }) {
 
     if (error) {
         return <Error500 />;
+    }
+
+    if(error404){
+        return <div className="h-screen flex m-auto"><NotFound error={error404}/></div>;
     }
 
     if (!article) {
