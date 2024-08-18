@@ -25,7 +25,7 @@ export default function Search() {
     >
       <input
         ref={targetRef}
-        className={`${showSearchInput ? 'block' : 'hidden'} appearance-none absolute rounded-lg px-5 top-0 left-0 w-full h-10 outline-0 border-0 m-0`}
+        className={`${showSearchInput ? 'block' : 'hidden'} appearance-none absolute text-black rounded-lg px-5 top-0 left-0 w-full h-10 outline-none outline-0 border-0 m-0`}
       />
       {showSearchInput ? (
         <svg
