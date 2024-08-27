@@ -91,8 +91,8 @@ export default function Blog() {
                 </div>
                 <div className="mt-7">
                     {
-                        Object.keys(articulos).map((category) => (
-                            <div>
+                        Object.keys(articulos).map((category, i) => (
+                            <div key={i}>
                                 <div>
                                     <div className="w-16 border-b-2 border-b-morado">
                                         <p className="text-xl font-notojp text-verde capitalize">{category}</p>

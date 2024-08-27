@@ -13,15 +13,16 @@ import Paragraph from "../components/paragraph";
 import Navbar from "@/components/nav/navbar";
 
 export default function RouteBlog({ params }: { params: { tag: string[] } }) {
-    if (params.tag.length < 2) {
-        return <div className="h-screen flex m-auto"><NotFound /></div>;
-    }
-
     const [article, setArticle] = useState<Article | null>(null);
     const [error404, setError404] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        if (params.tag.length < 2) {
+            <div className="h-screen flex m-auto"><NotFound /></div>;
+            return
+        };
+
         const fetchArticle = async () => {
             try {
                 const items = await getArticleBySlug(params.tag[1]);
