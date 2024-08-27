@@ -1,6 +1,5 @@
 "use client";
 
-import { getArticleBySlug } from "@/utils/contentful";
 import { useEffect, useState } from "react";
 import { Article } from "../interfaces";
 import ImgBanner from "../components/imgBanner";
@@ -25,12 +24,15 @@ export default function RouteBlog({ params }: { params: { tag: string[] } }) {
 
         const fetchArticle = async () => {
             try {
-                const items = await getArticleBySlug(params.tag[1]);
+                const req = await fetch(`/api/blog/view-article?slug=${params.tag[1]}`);
+                if(req.status === 404){
+                    setError404('No se pudo encontrar el artículo');
+                }
+
+                const items = await req.json();
+                console.log({items})
                 if (items) {
                     setArticle((items as Article));
-                }
-                else {
-                    setError404('No se pudo encontrar el artículo');
                 }
             } catch (err) {
                 setError('No se pudo cargar el artículo');

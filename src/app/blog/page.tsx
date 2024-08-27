@@ -4,7 +4,6 @@ import Navbar from '@/components/nav/navbar';
 import Image from 'next/image';
 import bannerImage from '@/public/imgs/banner.jpg';
 import principal from '@/public/imgs/principal.jpg';
-import { getArticles } from '@/utils/contentful';
 import { useEffect, useState } from 'react';
 import { useRouter } from "next/navigation";
 import { Article } from './interfaces';
@@ -31,15 +30,16 @@ export default function Blog() {
 
     useEffect(() => {
         const fetchArticles = async () => {
-            const response = await getArticles();
-            console.log(response[0].fields);
+            const req = await fetch('/api/blog/get-articles');
+            const response = await req.json();
+            console.log(response[0].metadata);
             //@ts-ignore
-            setArticulos(groupByCategory(response.map(r => r.fields?.featuredBlogPost)));
+            setArticulos(groupByCategory(response));
         };
 
         fetchArticles();
     }, []);
-
+    console.log(articulos)
     return (
         <>
             <Navbar />
@@ -110,7 +110,7 @@ export default function Blog() {
                                             </div>
                                             <div className="flex py-5 relative h-full">
                                                 <button className="bg-morado text-purple-300 rounded-xl px-3 py-1 absolute right-2 text-sm hover:scale-105 hover:text-blanco">
-                                                    {article.metadata.tags[0].sys.id}
+                                                    {article.fields.category}
                                                 </button>
                                                 <div className="absolute px-5 bottom-2 py-2 font-notojp font-semibold text-md text-white">
                                                     {article.fields.title}
