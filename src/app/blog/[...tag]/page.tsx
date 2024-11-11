@@ -63,11 +63,26 @@ export default function RouteBlog({ params }: { params: { tag: string[] } }) {
 
     const options = {
         renderNode: {
+            [BLOCKS.EMBEDDED_ENTRY]: (node: any) => {
+                const { image } = node.data.target.fields;
+                
+                if(image){
+                    return <img src={image.fields.file.url} alt={image.fields.title} title={image.fields.description} />;
+                }
+            },
             [BLOCKS.EMBEDDED_ASSET]: (node: any) => {
                 const { title, description, file } = node.data.target.fields;
                 return <img src={file.url} alt={title} title={description} />;
             },
-            [BLOCKS.PARAGRAPH]: (node: any, children: any) => <Paragraph>{children}</Paragraph>
+            [BLOCKS.PARAGRAPH]: (node: any, children: any) => <Paragraph>{children}</Paragraph>,
+            [BLOCKS.HEADING_2]: (node: any, children: any) => <h2 className="text-3xl mb-1 mt-3 px-2 font-bold">{children}</h2>,
+            [BLOCKS.HEADING_3]: (node: any, children: any) => <h3 className="text-2xl mb-1 mt-3 px-2 font-bold">{children}</h3>,
+            [BLOCKS.HEADING_4]: (node: any, children: any) => <h4 className="text-xl mb-1 mt-3 px-2 font-bold">{children}</h4>,
+            [BLOCKS.HEADING_5]: (node: any, children: any) => <h5 className="text-lg mb-1 mt-3 px-2 font-bold">{children}</h5>,
+            [BLOCKS.HEADING_6]: (node: any, children: any) => <h6 className="text-base mb-1 mt-3 px-2 font-bold">{children}</h6>,
+            [BLOCKS.UL_LIST]: (node: any, children: any) => <ul className="pl-6 list-disc">{children}</ul>,
+            [BLOCKS.OL_LIST]: (node: any, children: any) => <ol className="list-decimal list-inside">{children}</ol>,
+            [BLOCKS.LIST_ITEM]: (node: any, children: any) => <li className="mb-1">{children}</li>,            
         }
     };
 
